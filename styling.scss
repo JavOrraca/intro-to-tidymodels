@@ -1,0 +1,67 @@
+/*-- scss:defaults --*/
+$selection-bg: #C1ACC2;
+$selection-color: black;
+
+/*-- scss:rules --*/
+
+.sourceCode {
+  background-color: $brand-lightgrey !important;
+}
+
+ul {
+  margin-bottom: 0px !important;
+}
+
+kbd {
+  font-size: 0.75em !important;
+}
+
+td {
+  vertical-align: middle !important;
+}
+
+// figure and caption overrides
+img {
+  margin-bottom: 0px !important;
+}
+
+figcaption {
+  font-size: 0.3em !important;
+  text-align: center !important;
+}
+
+.footer {
+  font-size: 1vw !important;
+  color: black !important;
+}
+
+// fragment highlight colors
+.reveal .slides section {
+    .fragment.highlight-red,
+    .fragment.highlight-blue,
+    .fragment.highlight-green {
+      opacity: 1;
+      visibility: inherit
+    }
+  
+    .fragment.highlight-red.visible {
+      background-color: $brand-mauvemist;
+      color: black;
+      border-radius: 10px;
+      padding: 0px
+    }
+
+    .fragment.highlight-green.visible {
+      background-color: $brand-seaglass;
+      color: black;
+      border-radius: 10px;
+      padding: 0px;
+    }
+  
+  .fragment.highlight-blue.visible {
+      background-color: black;
+      color: $brand-seaglass;
+      border-radius: 10px;
+      padding: 0px;
+  }
+}

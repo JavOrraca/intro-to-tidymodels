@@ -1,0 +1,143 @@
+---
+format: 
+  revealjs:
+    embed-resources: false
+    theme: [brand, styling.scss]
+    width: 1280
+    height: 720
+eval: false
+---
+
+## {background-image="intro_to_tidymodels.png" background-size="contain" background-color="black"}
+
+# About Me {background-color='{{< brand color seaglass >}}'}
+
+## Professional Background
+
+💼 __Career__  
+|- [EY](https://www.ey.com) - Manager, Valuation, Modeling, & Economics  
+|- [PG&E](https://www.pgecorp.com) - Supervisor, Capital Recovery & Analysis  
+|- [KPMG](https://www.kpmg.us) - Sr Manager, Economics & Valuation  
+|- [Centene](https://www.centene.com) - Data Scientist III, Strategic Insights  
+|- [Bloomreach](https://www.bloomreach.com) - Sr Manager, Data Ops & Analytics  
+|- [Centene](https://www.centene.com) - Lead Machine Learning Engineer  
+<br>
+📚 __Education__<br>
+|- [Georgia Tech](https://www.gatech.edu) - BS Management  
+|- [UC Irvine](https://uci.edu) - MS Business Analytics  
+
+::: footer
+Personal Site: [JavierOrracaDeatcu.com](https://www.javierorracadeatcu.com/) | LinkedIn: [linkedin.com/in/orraca](https://www.linkedin.com/in/orraca/)
+:::
+
+## Technical Skills Gained
+
+💼 __Career__  
+|- [EY](https://www.ey.com) - Microsoft Excel, Microsoft Access, Financial Modeling  
+|- [PG&E](https://www.pgecorp.com) - SQL, ODBC (connecting Access / Excel to EDWs)  
+|- [KPMG](https://www.kpmg.us) - VBA scripting, Excel add-ins (Power Query and Power BI)
+|- [Centene](https://www.centene.com) - R, Web Apps, Package Dev, ML / AI, Cloud DS Tools  
+|- [Bloomreach](https://www.bloomreach.com) - GCP, Amazon Redshift, Linux, Google Workspaces  
+|- [Centene](https://www.centene.com) - Docker, k8s, Databricks, Linux, bash, GenAI + LLMs   
+<br>
+📚 __Education__<br>
+|- [Georgia Tech](https://www.gatech.edu) - Finance, Business Management  
+|- [UC Irvine](https://uci.edu) - Business Analytics, Data Science  
+
+::: footer
+Personal Site: [JavierOrracaDeatcu.com](https://www.javierorracadeatcu.com/) | LinkedIn: [linkedin.com/in/orraca](https://www.linkedin.com/in/orraca/)
+:::
+
+# Data Science Issues {background-color='{{< brand color seaglass >}}'}
+
+## AI... It's an umbrella
+
+![](images/AI.jpg){fig-align="center"}
+
+::: footer
+Image credit: <https://vas3k.com/blog/machine_learning>
+:::
+
+## AI... It's a _growing_ umbrella
+
+![](images/AI.gif){fig-align="center"}
+
+::: footer
+Image credit: <https://vas3k.com/blog/machine_learning>
+:::
+
+## Classical ML... _Another_ umbrella
+
+![](images/ml_illustration.jpg){fig-align="center"}
+
+::: footer
+Image credit: <https://vas3k.com/blog/machine_learning>
+:::
+
+## ML Issues
+
+- How should I measure my baseline?
+
+- Which ML algorithm(s) should I use?
+
+- How should I split my training and testing data?
+
+- How should I evaluate my model fit?
+
+- Which performance evaluation metric(s) should I use?
+
+- [Every ML package has a unique set functions and arguments]{.fragment .highlight-red}
+
+## {.center}
+
+::: r-fit-text
+and the most annoying issue...
+:::
+
+## {.center background-color="black"}
+
+::: r-fit-text
+data
+:::
+
+## {.center background-color="black"}
+
+::: r-fit-text
+sucks!
+:::
+
+## Data sucks!
+
+- Missing data (NAs, nulls, etc.)
+  - You may need to impute missing values
+
+. . .
+
+- Categorical variables
+  - ML algorithms might require dummy or one-hot encoding
+
+. . .
+
+- Data type issues
+  - For example, character strings and numbers in the same column
+
+. . .
+
+- Too many variables
+
+# Tidymodels
+
+## {.center background-color='{{< brand color peach >}}'}
+
+::: r-fit-text
+*Thank you!* 🤍
+:::
+
+# questions? {.center background-color='{{< brand color blue >}}'}
+
+<br><br>
+
+Connect with me!
+
+- Personal Site: [JavierOrracaDeatcu.com](https://www.javierorracadeatcu.com/){style="color: black"}
+- LinkedIn: [linkedin.com/in/orraca](https://www.linkedin.com/in/orraca/){style="color: black"}

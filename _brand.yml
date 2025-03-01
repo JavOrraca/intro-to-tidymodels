@@ -1,0 +1,41 @@
+meta:
+  name: Javier Orraca-Deatcu
+  link:
+    home: https://www.javierorracadeatcu.com/
+    linkedin: https://www.linkedin.com/in/orraca
+    github: https://github.com/JavOrraca
+
+color:
+  palette:
+    lightgrey: "#F4F2F2"
+    seaglass: "#83AFA8"
+    olive: "#ADC2AC"
+    mauvemist: "#C1ACC2"
+    deepoceanblue: "#2A3A7D"
+    yellow: "#FFC600"
+  primary: seaglass
+  background: seaglass
+
+typography:
+  fonts:
+    - family: Righteous
+      source: google
+    - family: Source Code Pro
+      source: google
+  base: 
+    family: Righteous
+    weight: light
+  headings: 
+    family: Righteous
+    weight: 400
+    color: black
+  link:
+    color: deepoceanblue
+    decoration: underline
+  monospace: Source Code Pro
+  monospace-inline:
+    color: "#3d3d3d"
+    background-color: mauvemist
+    size: 0.8em
+  monospace-block:
+    size: 0.4em
