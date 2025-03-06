@@ -9,6 +9,7 @@ color:
   palette:
     lightgrey: "#F4F2F2"
     seaglass: "#83AFA8"
+    lightseaglass: "#EEF4F3"
     olive: "#ADC2AC"
     mauvemist: "#C1ACC2"
     deepoceanblue: "#2A3A7D"

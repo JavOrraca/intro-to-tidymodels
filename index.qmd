@@ -1,11 +1,11 @@
 ---
 format: 
   revealjs:
-    embed-resources: false
+    embed-resources: true
     theme: [brand, styling.scss]
     width: 1280
     height: 720
-eval: false
+eval: true
 ---
 
 ## {background-image="intro_to_tidymodels.png" background-size="contain" background-color="black"}
@@ -86,7 +86,7 @@ Image credit: <https://vas3k.com/blog/machine_learning>
 
 - Which performance evaluation metric(s) should I use?
 
-- [Every ML package has a unique set functions and arguments]{.fragment .highlight-red}
+- Every ML package has a unique set functions and arguments
 
 ## {.center}
 
@@ -125,7 +125,367 @@ sucks!
 
 - Too many variables
 
-# Tidymodels
+# About Tidymodels {background-color='{{< brand color seaglass >}}'}
+
+## What is Tidymodels?
+
+![](images/tidymodels_homepage.png){width="80%" height="80%" fig-align="center"}
+
+::: footer
+Learn more about Tidymodels at [tidymodels.org](https://www.tidymodels.org)
+:::
+
+## What is Tidymodels?
+
+- A collection of [R packages for reproducible ML]{.fragment .highlight-red}
+<br><br>
+- Follows tidy principles:
+  - Consistent interface
+  - Human-readable code
+  - Reproducible workflows
+<br><br>
+- Provides a [unified syntax for ML]{.fragment .highlight-red}
+
+::: footer
+Learn more about Tidymodels at [tidymodels.org](https://www.tidymodels.org)
+:::
+
+## The ML Workflow (with Tidymodels)
+
+![](images/tidymodels_process.jpeg){width="90%" height="90%" fig-align="center"}
+
+::: footer
+Image credit: Chen Xing's [Tidymodels Ecosystem Tutorial](https://rpubs.com/chenx/tidymodels_tutorial)
+:::
+
+## Let's Build a Classification Model!
+
+Our tidymodels workflow will follow the following steps:
+<br><br>
+
+:::: {.columns}
+::: {.column width="50%"}
+  0. Load libraries and data
+  1. Split data (training vs testing)
+  2. Create recipe for preprocessing
+  3. Specify model
+  4. Create workflow
+  5. Train model
+  6. Evaluate performance
+  7. Visualize model performance
+:::
+
+::: {.column width="50%"}
+  8. Create setup for hyperparameter tuning
+  9. Create cross-validation folds
+  10. Define the tuning grid
+  11. Tune the model
+  12. Visualize tuning results
+  13. Select the best model
+  14. Final fit
+  15. Variable importance
+:::
+::::
+
+## Step 0: Load Libraries & Data {auto-animate="true"}
+
+Prediction problem: Predict survival of Titanic passengers 
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "1-10|9"
+
+# Load necessary packages
+library(tidyverse)
+library(tidymodels)
+library(titanic)
+
+# Load and prepare data
+data(titanic_train)
+titanic_data <- as_tibble(titanic_train) |> 
+  mutate(Survived = factor(Survived, levels = c(0, 1)))
+
+```
+
+## Step 0: Load Libraries & Data {auto-animate="true"}
+
+Prediction problem: Predict survival of Titanic passengers 
+
+```{r}
+#| echo: true
+
+# Load necessary packages
+library(tidyverse)
+library(tidymodels)
+library(titanic)
+
+# Load and prepare data
+data(titanic_train)
+titanic_data <- as_tibble(titanic_train) |> 
+  mutate(Survived = factor(Survived, levels = c(0, 1)))  # Convert target variable to a factor level
+
+# Take a look at the data
+glimpse(titanic_data)
+```
+
+## Step 1a: Split the Data
+
+```{r}
+#| echo: true
+
+# Split the data (create a singular object containing training and testing splits)
+set.seed(123)
+titanic_split <- initial_split(
+  data = titanic_data, 
+  prop = 0.75, 
+  strata = Survived # stratify split by Survived column
+)
+
+# Create training and testing datasets
+train_data <- training(titanic_split)
+test_data <- testing(titanic_split)
+```
+
+## Step 1b: Take a `glimpse()` at the splits
+
+```{r}
+#| echo: true
+
+# Use dplyr::glimpse() to review the training split
+glimpse(train_data)
+```
+
+## Step 1c: Check the Stratification
+
+```{r}
+#| echo: true
+
+# Review the proportion of 0s and 1s in each split
+train_data |> 
+  summarise(Train_Rows = n(), .by = Survived) |> 
+  mutate(Train_Percent = Train_Rows / sum(Train_Rows)) |> 
+  left_join(test_data |> 
+    summarise(Test_Rows = n(), .by = Survived) |> 
+    mutate(Test_Percent = Test_Rows / sum(Test_Rows)),
+  join_by(Survived))
+```
+
+## Step 2: Create a Modeling Recipe
+
+```{r}
+#| echo: true
+
+# Create a pre-processing recipe
+titanic_recipe <- recipe(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare, 
+                         data = train_data) |>
+  step_impute_median(Age) |>               # Handle missing values in Age
+  step_dummy(all_nominal_predictors()) |>  # Convert categorical variables to dummy variables
+  step_normalize(all_numeric_predictors()) # Normalize numeric predictors
+
+titanic_recipe
+```
+
+## Step 3: Specify the Model
+
+With `{parsnip}`, you have a unified interface for ML:
+
+```{r}
+#| echo: true
+
+# Specify a logistic regression model
+log_model <- logistic_reg() |>
+  set_engine("glm") |>
+  set_mode("classification")
+
+log_model
+```
+
+## Step 4: Create a Workflow
+
+```{r}
+#| echo: true
+
+# Create a workflow
+titanic_workflow <- workflow() |>
+  add_recipe(titanic_recipe) |>
+  add_model(log_model)
+
+titanic_workflow
+```
+
+## Step 5: Train the Model
+
+```{r}
+#| echo: true
+
+# Fit the workflow to the training data
+titanic_fit <- last_fit(titanic_workflow, titanic_split)
+
+titanic_fit
+```
+
+## Step 6: Evaluate the Model
+
+```{r}
+#| echo: true
+
+# Collect metrics from the `last_fit()` model object
+collect_metrics(titanic_fit)
+```
+
+## Step 7: Visualize Model Performance
+
+```{r}
+#| echo: true
+
+# Plot confusion matrix
+titanic_fit |>
+  collect_predictions() |> 
+  conf_mat(truth = Survived, estimate = .pred_class) |> 
+  autoplot(type = "heatmap")
+```
+
+## Step 8: Hyperparameter Tuning
+
+Let's try modeling with `{glmnet}` and tuning
+
+```{r}
+#| echo: true
+
+# Create a tunable model specification
+log_model_tune <- logistic_reg(
+  penalty = tune(),
+  mixture = tune()
+) |>
+  set_engine("glmnet") |>
+  set_mode("classification")
+
+# Create a tuning workflow
+tune_workflow <- workflow() |>
+  add_recipe(titanic_recipe) |>
+  add_model(log_model_tune)
+```
+
+## Step 9: Create Cross-Validation Folds
+
+```{r}
+#| echo: true
+
+
+# Create cross-validation folds
+set.seed(234)
+titanic_folds <- vfold_cv(train_data, v = 5, strata = Survived)
+
+titanic_folds
+```
+
+## Step 10: Define the Tuning Grid
+
+```{r}
+#| echo: true
+
+# Create a grid of hyperparameters to try
+log_grid <- grid_regular(
+  penalty(range = c(-3, 0), trans = log10_trans()),
+  mixture(range = c(0, 1)),
+  levels = c(4, 5)
+)
+
+log_grid
+```
+
+## Step 11: Tune the Model
+
+```{r}
+#| echo: true
+
+# Tune the model
+set.seed(345)
+log_tuning_results <- tune_grid(
+  tune_workflow,
+  resamples = titanic_folds,
+  grid = log_grid,
+  metrics = metric_set(accuracy, roc_auc)
+)
+
+log_tuning_results
+```
+
+## Step 12: Visualize Tuning Results
+
+```{r}
+#| echo: true
+
+# Show the best models
+show_best(log_tuning_results, metric = "roc_auc")
+```
+
+## Step 12: Visualize Tuning Results (cont.)
+
+```{r}
+#| echo: true
+
+# Create a visualization of the tuning results
+autoplot(log_tuning_results)
+```
+
+## Step 13: Select the Best Model
+
+```{r}
+#| echo: true
+
+# Select the best hyperparameters
+best_params <- select_best(log_tuning_results, metric = "roc_auc")
+
+best_params
+```
+
+```{r}
+#| echo: true
+
+# Finalize the workflow with the best parameters
+final_workflow <- finalize_workflow(tune_workflow, best_params)
+```
+
+## Step 14: Final Fit
+
+```{r}
+#| echo: true
+
+# Fit the final model to the entire training set and evaluate on test set
+final_fit <- final_workflow |>
+  last_fit(titanic_split)
+
+# Get the metrics
+collect_metrics(final_fit)
+```
+
+## Step 15: Variable Importance
+
+```{r}
+#| echo: true
+
+# Extract the fitted workflow
+fitted_workflow <- final_fit |>
+  extract_workflow()
+
+# Extract the fitted model
+fitted_model <- fitted_workflow |>
+  extract_fit_parsnip()
+
+# Calculate variable importance
+vip::vip(fitted_model)
+```
+
+## Tidymodels Benefits
+
+- **Consistent Interface**: Same syntax across different ML algorithms
+- **Modularity**: Each step is a separate function that can be modified
+- **Reproducibility**: Workflows capture the entire modeling process
+- **Extensibility**: Easy to add new steps or algorithms
+- **Visualization**: Built-in tools for visualizing results
+- **Tuning**: Streamlined process for hyperparameter optimization
 
 ## {.center background-color='{{< brand color peach >}}'}
 
