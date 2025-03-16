@@ -8,6 +8,11 @@ format:
 eval: true
 ---
 
+```{r}
+#| echo: false
+source(".Rprofile")
+```
+
 ## {background-image="intro_to_tidymodels.png" background-size="contain" background-color="black"}
 
 # About Me {background-color='{{< brand color seaglass >}}'}
@@ -158,26 +163,27 @@ Learn more about Tidymodels at [tidymodels.org](https://www.tidymodels.org)
 Image credit: Chen Xing's [Tidymodels Ecosystem Tutorial](https://rpubs.com/chenx/tidymodels_tutorial)
 :::
 
-## Let's Build a Classification Model!
+## Let's Build a Binary Classification Model! {.smaller}
 
-Our tidymodels workflow will follow the following steps:
+<br><br>
+Our tidymodels workflow will follow the steps below:
 <br><br>
 
 :::: {.columns}
 ::: {.column width="50%"}
-  0. Load libraries and data
-  1. Split data (training vs testing)
-  2. Create recipe for preprocessing
+  0. Load libraries & data
+  1. Split data
+  2. Create recipe
   3. Specify model
   4. Create workflow
   5. Train model
   6. Evaluate performance
-  7. Visualize model performance
+  7. Visualize performance
 :::
 
 ::: {.column width="50%"}
-  8. Create setup for hyperparameter tuning
-  9. Create cross-validation folds
+  8. Setup for tuning
+  9. Create CV folds
   10. Define the tuning grid
   11. Tune the model
   12. Visualize tuning results
@@ -185,6 +191,184 @@ Our tidymodels workflow will follow the following steps:
   14. Final fit
   15. Variable importance
 :::
+::::
+
+## The Big Picture: Logistic Regression
+
+- [**Logistic Regression Overview**]{.fragment .highlight-red}: Logistic regression is a statistical method that uses the logistic (sigmoid) function to model the probability of a binary outcome based on predictor variables (in our example, 1 = survived, 0 = did not survive)
+
+- [**Titanic Model Application**]{.fragment .highlight-red}: In our case, age is one of the predictors to estimate a passenger's likelihood of surviving the Titanic
+
+- [**Interpreting the S-Curve**]{{.fragment .highlight-red}}: The S-shaped curve shows how the probability of survival changes smoothly from low to high (or vice versa) as age varies, highlighting a gradual transition rather than a sudden jump between outcomes.
+
+## The Big Picture: Logistic Regression
+
+```{r}
+#| echo: false
+
+# Sample dataset: simulated binary outcome based on predictor x
+set.seed(123)
+n <- 50
+x <- seq(-10, 10, length.out = n)
+# Generate probabilities using the logistic function
+prob <- 1 / (1 + exp(-x))
+# Create binary outcomes using the probabilities
+y <- rbinom(n, size = 1, prob = prob)
+data <- data.frame(x = x, y = y)
+
+library(ggplot2)
+ggplot(data, aes(x = x, y = y)) +
+  geom_point(alpha = 0.6, color = "red") + 
+  stat_smooth(method = "glm", 
+              method.args = list(family = "binomial"), 
+              se = FALSE, color = "blue") +
+  labs(title = "Titanic Survival Probability by Age",
+       x = "Predictor: Age",
+       y = "Probability of Survival") +
+  scale_x_continuous(breaks = c(-10, -5, 0, 5, 10),
+                     labels = c("80", "60", "40", "20", "0"))
+```
+
+## The Big Picture: `glm()` setup
+
+:::: {.columns}
+
+::: {.column width="49%"}
+
+*base R's `glm()`*
+
+```{r}
+#| eval: false
+#| echo: true
+
+# Convert certain variables to factors to treat as categorical
+titanic$Survived <- as.factor(titanic$Survived)
+titanic$Pclass <- as.factor(titanic$Pclass)
+titanic$Sex <- as.factor(titanic$Sex)
+
+# Impute missing values for Age and Fare with their respective means
+titanic$Age[is.na(titanic$Age)]   <- mean(titanic$Age, na.rm = TRUE)
+titanic$Fare[is.na(titanic$Fare)] <- mean(titanic$Fare, na.rm = TRUE)
+
+# Fit the logistic regression model
+titanic_fit <- glm(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare, 
+                   data = titanic, 
+                   family = binomial)
+
+# Display the summary of the model to inspect coefficients and significance
+summary(titanic_fit)
+```
+
+:::
+
+::: {.column width="2%"}
+:::
+
+::: {.column width="49%"}
+
+*tidymodels `set_engine("glm")`*
+
+```{r}
+#| eval: false
+#| echo: true
+
+# Convert relevant variables to factors
+titanic <- titanic |> 
+  mutate(Survived = factor(Survived))
+
+# Setup recipe
+titanic_recipe <- recipe(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare, 
+                         data = titanic) |> 
+  step_impute_mean(all_numeric_predictors()) |> 
+  step_dummy(all_nominal_predictors())
+
+# Setup model specification and workflow pipeline
+logistic_spec <- logistic_reg() |> 
+  set_engine("glm") |> 
+  set_mode("classification")
+
+titanic_workflow <- workflow() |> 
+  add_recipe(titanic_recipe) |> 
+  add_model(logistic_spec)
+
+titanic_fit <- titanic_workflow |> 
+  fit(data = titanic)
+```
+:::
+
+::::
+
+## The Big Picture: glmnet
+
+:::: {.columns}
+
+::: {.column width="49%"}
+
+*R's `{glmnet}`*
+
+```{r}
+#| eval: false
+#| echo: true
+
+# Convert certain variables to factors to treat as categorical
+titanic$Survived <- as.factor(titanic$Survived)
+titanic$Pclass <- as.factor(titanic$Pclass)
+titanic$Sex <- as.factor(titanic$Sex)
+
+# Impute missing values for Age and Fare with their respective means
+titanic$Age[is.na(titanic$Age)]   <- mean(titanic$Age, na.rm = TRUE)
+titanic$Fare[is.na(titanic$Fare)] <- mean(titanic$Fare, na.rm = TRUE)
+
+# Create a design matrix for predictors
+### model.matrix() automatically handles factors by creating dummy variables
+### Remove the intercept column (first column) with [,-1] because {glmnet} includes it by default
+x <- model.matrix(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare,
+                  data = titanic)[, -1]
+
+# Create the response vector
+y <- titanic$Survived
+
+# Fit the logistic regression model using glmnet (for a range of lambda values)
+glmnet_fit <- glmnet(x, y, family = "binomial")
+```
+
+:::
+
+::: {.column width="2%"}
+:::
+
+::: {.column width="49%"}
+
+*tidymodels `set_engine("glmnet")`*
+
+```{r}
+#| eval: false
+#| echo: true
+
+# Convert relevant variables to factors
+titanic <- titanic |> 
+  mutate(Survived = factor(Survived))
+
+# Setup recipe
+titanic_recipe <- recipe(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare, 
+                         data = titanic) |> 
+  step_impute_mean(all_numeric_predictors()) |> 
+  step_dummy(all_nominal_predictors())
+
+# Setup model specification and workflow pipeline
+glmnet_spec <- logistic_reg() |> 
+  set_engine("glmnet") |> 
+  set_mode("classification")
+
+titanic_workflow <- workflow() |> 
+  add_recipe(titanic_recipe) |> 
+  add_model(glmnet_spec)
+
+titanic_fit <- titanic_workflow |> 
+  fit(data = titanic)
+```
+:::
+
 ::::
 
 ## Step 0: Load Libraries & Data {auto-animate="true"}
@@ -279,7 +463,7 @@ train_data |>
 # Create a pre-processing recipe
 titanic_recipe <- recipe(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare, 
                          data = train_data) |>
-  step_impute_median(Age) |>               # Handle missing values in Age
+  step_impute_median(all_numeric_predictors()) |>         # Handle missing values in Age
   step_dummy(all_nominal_predictors()) |>  # Convert categorical variables to dummy variables
   step_normalize(all_numeric_predictors()) # Normalize numeric predictors
 
@@ -320,7 +504,11 @@ titanic_workflow
 #| echo: true
 
 # Fit the workflow to the training data
-titanic_fit <- last_fit(titanic_workflow, titanic_split)
+titanic_fit <- titanic_workflow |> 
+  last_fit(
+    split = titanic_split, 
+    metrics = metric_set(roc_auc, accuracy)
+  )
 
 titanic_fit
 ```
@@ -386,10 +574,10 @@ titanic_folds
 #| echo: true
 
 # Create a grid of hyperparameters to try
-log_grid <- grid_regular(
-  penalty(range = c(-3, 0), trans = log10_trans()),
-  mixture(range = c(0, 1)),
-  levels = c(4, 5)
+log_grid <- grid_latin_hypercube(
+  penalty(),
+  mixture(),
+  size = 100
 )
 
 log_grid
@@ -406,7 +594,7 @@ log_tuning_results <- tune_grid(
   tune_workflow,
   resamples = titanic_folds,
   grid = log_grid,
-  metrics = metric_set(accuracy, roc_auc)
+  metrics = metric_set(roc_auc, accuracy)
 )
 
 log_tuning_results
@@ -487,13 +675,17 @@ vip::vip(fitted_model)
 - **Visualization**: Built-in tools for visualizing results
 - **Tuning**: Streamlined process for hyperparameter optimization
 
-## {.center background-color='{{< brand color peach >}}'}
+# About Positron
+
+Let's see a live demo of Positron!
+
+## {.center background-color='{{< brand color mauvemist >}}'}
 
 ::: r-fit-text
 *Thank you!* 🤍
 :::
 
-# questions? {.center background-color='{{< brand color blue >}}'}
+# questions? {.center background-color='{{< brand color mauvemist >}}'}
 
 <br><br>
 
