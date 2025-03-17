@@ -15,7 +15,7 @@ source(".Rprofile")
 
 ## {background-image="intro_to_tidymodels.png" background-size="contain" background-color="black"}
 
-## Agenda {background-color='{{< brand color seaglass >}}'}
+## Agenda
 
 <br><br>
 
@@ -25,7 +25,7 @@ source(".Rprofile")
 4. Intro to Positron
 5. Live Demo
 
-# About Me {background-color='{{< brand color seaglass >}}'}
+# About Me {background-color='{{< brand color mauvemist >}}'}
 
 ## Professional Background
 
@@ -63,7 +63,7 @@ Personal Site: [JavierOrracaDeatcu.com](https://www.javierorracadeatcu.com/) | L
 Personal Site: [JavierOrracaDeatcu.com](https://www.javierorracadeatcu.com/) | LinkedIn: [linkedin.com/in/orraca](https://www.linkedin.com/in/orraca/)
 :::
 
-# Data Science Issues {background-color='{{< brand color seaglass >}}'}
+# Data Science Issues {background-color='{{< brand color mauvemist >}}'}
 
 ## AI... It's an umbrella
 
@@ -140,7 +140,7 @@ sucks!
 
 - Too many variables
 
-# Intro to Tidymodels {background-color='{{< brand color seaglass >}}'}
+# Intro to Tidymodels {background-color='{{< brand color mauvemist >}}'}
 
 ## What is Tidymodels?
 
@@ -176,7 +176,9 @@ Image credit: Chen Xing's [Tidymodels Ecosystem Tutorial](https://rpubs.com/chen
 ## Let's Build a Binary Classification Model! {.smaller}
 
 <br><br>
-Our tidymodels workflow will follow the steps below:
+
+**Our tidymodels workflow will follow the steps below:**
+
 <br><br>
 
 :::: {.columns}
@@ -205,22 +207,20 @@ Our tidymodels workflow will follow the steps below:
 
 ## The Big Picture: Logistic Regression {.smaller}
 
+<br><br>
 
 * **Logistic regression** is a statistical method that uses the logistic (or "sigmoid") function to model the probability of a binary outcome based on independent (or "predictor") variables
 
-<br>
+* Our logistic regression problem: **Predict the survival of Titanic passengers**:
+  * The binary target variable is `Survived`
+    * 0 = _did not survive_ the Titanic 😢
+    * 1 = _survived_ the Titanic 🎉
 
-* In the Titanic dataset that we'll rely on:
-  * 1 = survived the Titanic 🎉
-  * 0 = did not survive 😢
+* **The logistic function maps to an S-shaped curve** - In our Titanic example:
+  * It shows how the probability of survival changes from low to high (or vice versa)
+  * It illustrates that there is a gradual transition between outcomes rather than a sudden jump
 
-<br>
-
-- **Age** is one of the independent variables we'll use to predict a passenger's likelihood to survive
-
-<br>
-
-- The logistic function maps to an S-shaped curve and this shows how the probability of survival changes smoothly from low to high (or vice versa) as age decreases, highlighting a gradual transition rather than a sudden jump between outcomes
+- **Age is one of the independent variables** we'll use to predict a passenger's likelihood to survive
 
 ## The Big Picture: Logistic Regression
 
@@ -275,9 +275,6 @@ titanic$Fare[is.na(titanic$Fare)] <- mean(titanic$Fare, na.rm = TRUE)
 titanic_fit <- glm(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare, 
                    data = titanic, 
                    family = binomial)
-
-# Display the summary of the model to inspect coefficients and significance
-summary(titanic_fit)
 ```
 
 :::
@@ -304,13 +301,13 @@ titanic_recipe <- recipe(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare,
   step_dummy(all_nominal_predictors())
 
 # Setup model specification and workflow pipeline
-logistic_spec <- logistic_reg() |> 
+titanic_spec <- logistic_reg() |> 
   set_engine("glm") |> 
   set_mode("classification")
 
 titanic_workflow <- workflow() |> 
   add_recipe(titanic_recipe) |> 
-  add_model(logistic_spec)
+  add_model(titanic_spec)
 
 titanic_fit <- titanic_workflow |> 
   fit(data = titanic)
@@ -377,13 +374,13 @@ titanic_recipe <- recipe(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare,
   step_dummy(all_nominal_predictors())
 
 # Setup model specification and workflow pipeline
-glmnet_spec <- logistic_reg() |> 
+titanic_spec <- logistic_reg() |> 
   set_engine("glmnet") |> 
   set_mode("classification")
 
 titanic_workflow <- workflow() |> 
   add_recipe(titanic_recipe) |> 
-  add_model(glmnet_spec)
+  add_model(titanic_spec)
 
 titanic_fit <- titanic_workflow |> 
   fit(data = titanic)
@@ -393,8 +390,6 @@ titanic_fit <- titanic_workflow |>
 ::::
 
 ## Step 0: Load Libraries & Data {auto-animate="true"}
-
-Prediction problem: Predict survival of Titanic passengers 
 
 ```{r}
 #| echo: true
@@ -414,8 +409,6 @@ titanic_data <- as_tibble(titanic_train) |>
 ```
 
 ## Step 0: Load Libraries & Data {auto-animate="true"}
-
-Prediction problem: Predict survival of Titanic passengers 
 
 ```{r}
 #| echo: true
@@ -696,7 +689,7 @@ vip::vip(fitted_model)
 - **Visualization**: Built-in tools for visualizing results
 - **Tuning**: Streamlined process for hyperparameter optimization
 
-# Intro to Positron
+# Intro to Positron {background-color='{{< brand color mauvemist >}}'}
 
 ## A History of IDEs & Notebooks: RStudio
 
@@ -1087,7 +1080,7 @@ Positron docs | [Run Interactive Apps](https://positron.posit.co/run-interactive
 Visit Posit's new [Positron website](https://positron.posit.co) and their [YouTube channel](https://www.youtube.com/@PositPBC/videos) to learn more
 :::
 
-# Live Demo
+# Live Demo {background-color='{{< brand color mauvemist >}}'}
 
 Let's see Positron in action!
 
