@@ -21,11 +21,12 @@ typography:
   fonts:
     - family: Righteous
       source: google
+    - family: Rubik
+      source: google
     - family: Source Code Pro
       source: google
   base: 
-    family: Righteous
-    weight: light
+    family: Rubik
   headings: 
     family: Righteous
     weight: 400

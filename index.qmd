@@ -15,6 +15,16 @@ source(".Rprofile")
 
 ## {background-image="intro_to_tidymodels.png" background-size="contain" background-color="black"}
 
+## Agenda {background-color='{{< brand color seaglass >}}'}
+
+<br><br>
+
+1. About Me
+2. Data Science Issues
+3. Intro to Tidymodels
+4. Intro to Positron
+5. Live Demo
+
 # About Me {background-color='{{< brand color seaglass >}}'}
 
 ## Professional Background
@@ -40,7 +50,7 @@ Personal Site: [JavierOrracaDeatcu.com](https://www.javierorracadeatcu.com/) | L
 💼 __Career__  
 |- [EY](https://www.ey.com) - Microsoft Excel, Microsoft Access, Financial Modeling  
 |- [PG&E](https://www.pgecorp.com) - SQL, ODBC (connecting Access / Excel to EDWs)  
-|- [KPMG](https://www.kpmg.us) - VBA scripting, Excel add-ins (Power Query and Power BI)
+|- [KPMG](https://www.kpmg.us) - VBA scripting, Excel add-ins (Power Query and Power BI)  
 |- [Centene](https://www.centene.com) - R, Web Apps, Package Dev, ML / AI, Cloud DS Tools  
 |- [Bloomreach](https://www.bloomreach.com) - GCP, Amazon Redshift, Linux, Google Workspaces  
 |- [Centene](https://www.centene.com) - Docker, k8s, Databricks, Linux, bash, GenAI + LLMs   
@@ -130,7 +140,7 @@ sucks!
 
 - Too many variables
 
-# About Tidymodels {background-color='{{< brand color seaglass >}}'}
+# Intro to Tidymodels {background-color='{{< brand color seaglass >}}'}
 
 ## What is Tidymodels?
 
@@ -193,13 +203,24 @@ Our tidymodels workflow will follow the steps below:
 :::
 ::::
 
-## The Big Picture: Logistic Regression
+## The Big Picture: Logistic Regression {.smaller}
 
-- [**Logistic Regression Overview**]{.fragment .highlight-red}: Logistic regression is a statistical method that uses the logistic (sigmoid) function to model the probability of a binary outcome based on predictor variables (in our example, 1 = survived, 0 = did not survive)
 
-- [**Titanic Model Application**]{.fragment .highlight-red}: In our case, age is one of the predictors to estimate a passenger's likelihood of surviving the Titanic
+* **Logistic regression** is a statistical method that uses the logistic (or "sigmoid") function to model the probability of a binary outcome based on independent (or "predictor") variables
 
-- [**Interpreting the S-Curve**]{{.fragment .highlight-red}}: The S-shaped curve shows how the probability of survival changes smoothly from low to high (or vice versa) as age varies, highlighting a gradual transition rather than a sudden jump between outcomes.
+<br>
+
+* In the Titanic dataset that we'll rely on:
+  * 1 = survived the Titanic 🎉
+  * 0 = did not survive 😢
+
+<br>
+
+- **Age** is one of the independent variables we'll use to predict a passenger's likelihood to survive
+
+<br>
+
+- The logistic function maps to an S-shaped curve and this shows how the probability of survival changes smoothly from low to high (or vice versa) as age decreases, highlighting a gradual transition rather than a sudden jump between outcomes
 
 ## The Big Picture: Logistic Regression
 
@@ -229,7 +250,7 @@ ggplot(data, aes(x = x, y = y)) +
                      labels = c("80", "60", "40", "20", "0"))
 ```
 
-## The Big Picture: `glm()` setup
+## The Big Picture: log reg with `glm()`
 
 :::: {.columns}
 
@@ -298,7 +319,7 @@ titanic_fit <- titanic_workflow |>
 
 ::::
 
-## The Big Picture: glmnet
+## The Big Picture: log reg with `{glmnet}`
 
 :::: {.columns}
 
@@ -675,9 +696,400 @@ vip::vip(fitted_model)
 - **Visualization**: Built-in tools for visualizing results
 - **Tuning**: Streamlined process for hyperparameter optimization
 
-# About Positron
+# Intro to Positron
 
-Let's see a live demo of Positron!
+## A History of IDEs & Notebooks: RStudio
+
+<br>
+
+![Image: © Posit Software, PBC.](images/rstudio_ide.png){height="70%" width="70%" fig-align="center"}
+
+::: footer
+Learn more about the open-source RStudio IDE | <https://posit.co/products/open-source/rstudio>
+:::
+
+## A History of IDEs & Notebooks: RStudio
+
+![Image: © Posit Software, PBC.](images/rstudio-panes-labeled.jpeg){height="55%" width="55%" fig-align="center"}
+
+::: footer
+RStudio User Guide | <https://docs.posit.co/ide/user/ide/get-started>
+:::
+
+## A History of IDEs & Notebooks: VS Code
+
+![](images/vs_code.png){height="65%" width="65%" fig-align="center"}
+
+::: footer
+Learn about Microsoft's Virtual Studio Code ("VS Code") User Interface | <https://code.visualstudio.com/docs/getstarted/userinterface>
+:::
+
+## A History of IDEs & Notebooks: Jupyter
+
+![](images/jupyter_notebook.png){height="50%" width="50%" fig-align="center"}
+
+::: footer
+Image: © Ander Fernández Jauregui | Learn about Project Jupyter's [Jupyter Notebook](https://jupyter.org)
+:::
+
+## IDE Similarities & Differences
+
+- RStudio IDE's "always on" panes welcomed R users seeking a data-analysis-first experience
+
+- [For Python users, RStudio felt too R-centric]{.fragment .highlight-red} and other tools worked *just fine* including VS Code, Jupyter Notebooks, PyCharm, etc.
+
+- There are many programming languages that can be used for data analysis, [but Python and R are the de facto standards for data science]{.fragment .highlight-red}
+
+- There lacks a unifying IDE for Python _and_ R users
+
+## Introducing Positron, *it looks familiar!*
+
+![](images/positron.png){fig-align="center"}
+
+::: footer
+Visit the new Positron website to learn more | <https://positron.posit.co/>
+:::
+
+
+## About Positron
+
+* What is Positron? From Posit's getting started docs:
+  * A next-generation data science IDE built by Posit PBC
+  * An extensible, polyglot tool for writing code and exploring data
+  * A familiar environment for reproducible authoring and publishing
+
+* Positron is [a tailor-made IDE for data science]{.fragment .highlight-red} built on top of [Code OSS](https://github.com/microsoft/vscode) that can be used with any combination of programming languages 
+
+::: footer
+Visit the new Positron website to learn more | <https://positron.posit.co/>
+:::
+
+
+## VS Code OSS w/ RStudio panes!
+
+![](images/positron-panes.svg){fig-align="center"}
+
+::: footer
+Layout by Dr. Athanasia Mo Mowinckel | [Positron IDE - A new IDE for data science](https://drmowinckels.io/blog/2024/positron/)
+:::
+
+
+## Prerequisites {.smaller}
+
+<br>
+
+- **Windows** prereqs:
+  <br><br>
+  - Ensure the latest [Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version) is installed
+  <br><br>
+  - If you're an R user package developer, note that Positron doesn't currently bundle `Rtools`.
+  <br><br>
+  - For reference, `RTools` contains the required compilers needed to build R packages from source code on Windows
+
+::: footer
+Getting Started with Positron | [Machine Prerequisites](https://positron.posit.co/start.html)
+:::
+
+
+## Prerequisites {.smaller}
+
+<br>
+
+- **Python** prereqs:
+  <br><br>
+  - The Posit team recommends [pyenv](https://github.com/pyenv/pyenv) to manage Python versions, and Python versions from 3.8 to 3.12 are actively supported on Positron
+  <br><br>
+  - For Linux users, install the SQLite system libraries (`sqlite-devel` or `libsqlite3-dev`) ahead of time so `pyenv` can build your Python version(s) of choice
+  <br><br>
+  - Positron communicates with Python via the `ipykernel`
+  <br><br>
+  - If you're using `venv` or `conda` to manage your Python projects, you can install `ipykernal` manually as follows: `python3 -m pip install ipykernel`
+
+::: footer
+Getting Started with Positron | [Machine Prerequisites](https://positron.posit.co/start.html)
+:::
+
+
+## Prerequisites {.smaller}
+
+<br>
+
+- **R** prereqs:
+  <br><br>
+  - Positron requires R 4.2 or higher - To install R, follow the instructions for your OS at <https://cloud.r-project.org>
+  <br><br>
+  - If you’d like to have multiple R installations, [rig](https://github.com/r-lib/rig) is a great tool that works on macOS, Windows and Linux, and works well with Positron
+
+::: footer
+Getting Started with Positron | [Machine Prerequisites](https://positron.posit.co/start.html)
+:::
+
+
+## Interpreter Selector {.smaller}
+
+<br>
+
+:::: {.columns}
+
+::: {.column width="60%"}
+- When Positron starts for the first time in a new workspace (or project directory), it will start Python and/or R depending on your workspace characteristics
+<br><br>
+- In subsequent runs, [Positron will start the same interpreter(s) that was running the last time]{.fragment .highlight-red} that you used that workspace
+<br><br>
+- You can start, stop, and switch interpreters from the interpreter selector
+:::
+
+::: {.column width="40%"}
+![](images/interpreter_selector.png){width="393px" height="330px" fig-align="center"}
+:::
+
+::::
+
+::: footer
+Getting Started with Positron | [Interpreter Selection](https://positron.posit.co/interpreters.html)
+:::
+
+
+## Key Bindings & Command Palette {.smaller}
+
+- Key bindings trigger actions by pressing a combination of keys
+- The key binding <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> will bring up Positron's Command Palette
+- This lets you search and execute actions without needing to remember the key binding
+
+![](images/command_palette.png){width="75%" height="75%" fig-align="center"}
+
+<br>
+
+::: footer
+Learn more on Emil Hvitfeldt's blog post [Positron: My Key Bindings](https://emilhvitfeldt.com/post/positron-key-bindings/)
+:::
+
+
+## Global Keyboard Shortcuts {.smaller}
+
+<br>
+
+| Shortcut | Description |
+| -------- | ----------- |
+| <kbd>Cmd/Ctrl</kbd>+<kbd>Enter</kbd> | Run the selected code in the editor; if no code is selected, run the current statement | 
+| <kbd>Cmd/Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>0</kbd> | Restart the interpreter currently open in the Console | 
+| <kbd>Cmd/Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd> | Run the file open in the editor (using e.g. `source()` or `%run`) | 
+| <kbd>F1</kbd> | Show contextual help for the topic under the cursor |
+| <kbd>Cmd/Ctrl</kbd>+<kbd>K</kbd>, <kbd>Cmd/Ctrl</kbd>+<kbd>R</kbd> | Show contextual help for the topic under the cursor (alternate binding) |
+| <kbd>Cmd/Ctrl</kbd>+<kbd>K</kbd>, <kbd>F</kbd> | Focus the Console |
+| <kbd>Ctrl</kbd>+<kbd>L</kbd> | Clear the Console |
+
+::: footer
+Positron docs | [Keyboard Shortcuts](https://positron.posit.co/keyboard-shortcuts.html)
+:::
+
+
+## R Keyboard Shortcuts {.smaller}
+
+<br>
+
+| Shortcut | Description |
+| -------- | ----------- |
+| <kbd>Cmd/Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd> | Insert the pipe operator (`|>` or `%>%`) | 
+| <kbd>Alt</kbd>+<kbd>-</kbd> | Insert the assignment operator (`<-`) |
+| <kbd>Cmd/Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd> | Load the current R package, if any | 
+| <kbd>Cmd/Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd> | Build and install the current R package, if any | 
+| <kbd>Cmd/Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd> | Test the current R package, if any | 
+| <kbd>Cmd/Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd> | Check the current R package, if any | 
+| <kbd>Cmd/Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>D</kbd> | Document the current R package, if any | 
+
+::: footer
+Positron docs | [Keyboard Shortcuts](https://positron.posit.co/keyboard-shortcuts.html)
+:::
+
+
+## RStudio Keymap {.smaller}
+
+<br>
+
+If you're an experienced RStudio user, you can [easily set the RStudio keybindings]{.fragment .highlight-red} in the Positron settings:
+
+- Open Positron's settings in the UI or the keystroke <kbd>Cmd/Ctrl</kbd>+<kbd>,</kbd>
+- Search for "keymap", or navigate to *Extensions > RStudio Keymap*
+- Check the "Enable RStudio key mappings for Positron" checkbox
+
+::: footer
+Positron docs | [Keyboard Shortcuts](https://positron.posit.co/keyboard-shortcuts.html)
+:::
+
+
+## Data Explorer Overview {.smaller}
+
+<br>
+
+- The new [Data Explorer allows for interactive exploration]{.fragment .highlight-red} of various types of dataframes using Python (`pandas`, `polars`) or R (`data.frame`, `tibble`, `data.table`, `polars`)
+<br><br>
+- The Data Explorer has three primary components
+  - **Data grid**: Spreadsheet-like display of the data with sorting
+  - **Summary panel**: Column name, type and missing data percentage for each column
+  - **Filter bar**: Ephemeral filters for specific columns
+
+::: footer
+Positron docs | [Data Explorer](https://positron.posit.co/data-explorer.html)
+:::
+
+
+## Data Explorer Overview {.smaller}
+
+<br>
+
+- To use, navigate to the Variables Pane and click on the Data Explorer icon:
+
+![](images/data-explorer-variables.png){width="70%" height="70%" fig-align="center"}
+
+::: footer
+Positron docs | [Data Explorer](https://positron.posit.co/data-explorer.html)
+:::
+
+
+## Data Explorer Overview
+
+![](images/data-explorer.png){width="80%" height="80%" fig-align="center"}
+
+::: footer
+Positron docs | [Data Explorer](https://positron.posit.co/data-explorer.html)
+:::
+
+
+## Data Explorer's *Data Grid* {.smaller}
+
+<br>
+
+:::: {.columns}
+
+::: {.column width="60%"}
+- The data grid is the primary display and [scales efficiently]{.fragment .highlight-red} with large in-memory datasets up to millions of rows or columns
+<br><br>
+- At the top right of each column, there is a context menu that [controls sorting and filtering]{.fragment .highlight-red} in the selected column
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="35%"}
+![](images/data-grid-menu.png){fig-align="center"}
+:::
+
+::::
+
+::: footer
+Positron docs | [Data Explorer](https://positron.posit.co/data-explorer.html)
+:::
+
+
+## Data Explorer's *Summary Panel* {.smaller}
+
+<br>
+
+:::: {.columns}
+
+::: {.column width="60%"}
+- Displays a vertical scrolling list of all columns in the data
+<br><br>
+- It [displays a sparkline histogram of that column’s data]{.fragment .highlight-red}, displays the amount of missing data, and shows some summary statistics about that column
+<br><br>
+- Double clicking on a column name will bring the column into focus in the data grid
+:::
+
+::: {.column width="40%"}
+![](images/data-explorer-summary-panel.png){fig-align="center"}
+:::
+
+::::
+
+::: footer
+Positron docs | [Data Explorer](https://positron.posit.co/data-explorer.html)
+:::
+
+
+## Data Explorer's *Filter Bar* {.smaller}
+
+<br>
+
+:::: {.columns}
+
+::: {.column width="40%"}
+- The filter bar has controls to add filters, show/hide existing filters, or clear filters
+<br><br>
+- Clicking the <kbd>+</kbd> button quickly adds a new filter
+<br><br>
+- The status bar at the bottom of the Data Explorer also displays the percentage and number of remaining rows relative to the original total after applying a filter
+:::
+
+::: {.column width="60%"}
+![](images/data-explorer-filter-ui.png){fig-align="center"}
+:::
+
+::::
+
+::: footer
+Positron docs | [Data Explorer](https://positron.posit.co/data-explorer.html)
+:::
+
+
+## Connections Pane {.smaller}
+
+:::: {.columns}
+
+::: {.column width="35%"}
+<br>
+- [Explore database connections]{.fragment .highlight-red} established with ODBC drivers or packages
+<br><br>
+- For Python users, the `sqlite3` and `SQLAlchemy` packages are supported
+<br><br>
+- For R users, the `odbc`, `sparklyr`, `bigrquery`, and more packages are supported
+:::
+
+::: {.column width="65%"}
+![](images/connections-pane.png){fig-align="center"}
+:::
+
+::::
+
+::: footer
+Positron docs | [Connections Pane](https://positron.posit.co/connections-pane.html)
+:::
+
+
+## Interactive Apps {.smaller}
+
+:::: {.columns}
+
+::: {.column width="35%"}
+<br>
+- Instead of running apps from a Terminal, Positron lets you run supported apps by clicking the <kbd>Play</kbd> button in Editor Actions
+<br><br>
+- [Supported apps include the following: Shiny, Dash, FastAPI, Flask, Gradio, and Streamlit]{.fragment .highlight-red}
+<br><br>
+- You can also start apps in Debug mode
+:::
+
+::: {.column width="65%"}
+![](images/run-app-button.png){fig-align="center"}
+:::
+
+::::
+
+::: footer
+Positron docs | [Run Interactive Apps](https://positron.posit.co/run-interactive-apps.html)
+:::
+
+## Learn More about Positron 
+
+{{< video https://youtu.be/8uRcB34Hhsw?si=AlSxeWoMzx0g9QlL width="100%" height="85%" >}}
+
+::: footer
+Visit Posit's new [Positron website](https://positron.posit.co) and their [YouTube channel](https://www.youtube.com/@PositPBC/videos) to learn more
+:::
+
+# Live Demo
+
+Let's see Positron in action!
 
 ## {.center background-color='{{< brand color mauvemist >}}'}
 
