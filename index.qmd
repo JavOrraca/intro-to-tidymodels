@@ -25,7 +25,7 @@ source(".Rprofile")
 4. Intro to Positron
 5. Live Demo
 
-# About Me {background-color='{{< brand color mauvemist >}}'}
+# 1. About Me {background-color='{{< brand color mauvemist >}}'}
 
 ## Professional Background
 
@@ -63,7 +63,7 @@ Personal Site: [JavierOrracaDeatcu.com](https://www.javierorracadeatcu.com/) | L
 Personal Site: [JavierOrracaDeatcu.com](https://www.javierorracadeatcu.com/) | LinkedIn: [linkedin.com/in/orraca](https://www.linkedin.com/in/orraca/)
 :::
 
-# Data Science Issues {background-color='{{< brand color mauvemist >}}'}
+# 2. Data Science Issues {background-color='{{< brand color mauvemist >}}'}
 
 ## AI... It's an umbrella
 
@@ -140,7 +140,7 @@ sucks!
 
 - Too many variables
 
-# Intro to Tidymodels {background-color='{{< brand color mauvemist >}}'}
+# 3. Intro to Tidymodels {background-color='{{< brand color mauvemist >}}'}
 
 ## What is Tidymodels?
 
@@ -205,22 +205,24 @@ Image credit: Chen Xing's [Tidymodels Ecosystem Tutorial](https://rpubs.com/chen
 :::
 ::::
 
-## The Big Picture: Logistic Regression {.smaller}
-
-<br><br>
+## The Big Picture: Logistic Regression
 
 * **Logistic regression** is a statistical method that uses the logistic (or "sigmoid") function to model the probability of a binary outcome based on independent (or "predictor") variables
 
-* Our logistic regression problem: **Predict the survival of Titanic passengers**:
+* Our modeling goal: **Predict the survival of Titanic passengers**:
   * The binary target variable is `Survived`
     * 0 = _did not survive_ the Titanic 😢
     * 1 = _survived_ the Titanic 🎉
 
-* **The logistic function maps to an S-shaped curve** - In our Titanic example:
-  * It shows how the probability of survival changes from low to high (or vice versa)
+## The Big Picture: Logistic Regression
+
+* **The logistic function maps to an S-shaped curve**
+
+* In our Titanic example, the S-curve:
+  * Shows how the probability of survival changes from low to high (or vice versa)
   * It illustrates that there is a gradual transition between outcomes rather than a sudden jump
 
-- **Age is one of the independent variables** we'll use to predict a passenger's likelihood to survive
+* **Age is one of the independent variables** we'll use to predict a passenger's likelihood to survive, so let's see an S-curve mapping the probabilities of survival by Age
 
 ## The Big Picture: Logistic Regression
 
@@ -477,9 +479,9 @@ train_data |>
 # Create a pre-processing recipe
 titanic_recipe <- recipe(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare, 
                          data = train_data) |>
-  step_impute_median(all_numeric_predictors()) |>         # Handle missing values in Age
-  step_dummy(all_nominal_predictors()) |>  # Convert categorical variables to dummy variables
-  step_normalize(all_numeric_predictors()) # Normalize numeric predictors
+  step_impute_median(all_numeric_predictors()) |> # Handle missing values in Age
+  step_dummy(all_nominal_predictors()) |>         # Convert categorical variables to dummy variables
+  step_normalize(all_numeric_predictors())        # Normalize numeric predictors
 
 titanic_recipe
 ```
@@ -492,11 +494,11 @@ With `{parsnip}`, you have a unified interface for ML:
 #| echo: true
 
 # Specify a logistic regression model
-log_model <- logistic_reg() |>
+model_spec <- logistic_reg() |>
   set_engine("glm") |>
   set_mode("classification")
 
-log_model
+model_spec
 ```
 
 ## Step 4: Create a Workflow
@@ -507,7 +509,7 @@ log_model
 # Create a workflow
 titanic_workflow <- workflow() |>
   add_recipe(titanic_recipe) |>
-  add_model(log_model)
+  add_model(model_spec)
 
 titanic_workflow
 ```
@@ -556,7 +558,7 @@ Let's try modeling with `{glmnet}` and tuning
 #| echo: true
 
 # Create a tunable model specification
-log_model_tune <- logistic_reg(
+model_spec_tune <- logistic_reg(
   penalty = tune(),
   mixture = tune()
 ) |>
@@ -566,14 +568,13 @@ log_model_tune <- logistic_reg(
 # Create a tuning workflow
 tune_workflow <- workflow() |>
   add_recipe(titanic_recipe) |>
-  add_model(log_model_tune)
+  add_model(model_spec_tune)
 ```
 
 ## Step 9: Create Cross-Validation Folds
 
 ```{r}
 #| echo: true
-
 
 # Create cross-validation folds
 set.seed(234)
@@ -582,16 +583,20 @@ titanic_folds <- vfold_cv(train_data, v = 5, strata = Survived)
 titanic_folds
 ```
 
+## Step 9: Create Cross-Validation Folds
+
+![Image: © Posit Software, PBC.](images/resampling.svg){height="70%" width="70%" fig-align="center"}
+
 ## Step 10: Define the Tuning Grid
 
 ```{r}
 #| echo: true
 
 # Create a grid of hyperparameters to try
-log_grid <- grid_latin_hypercube(
+log_grid <- grid_space_filling(
   penalty(),
   mixture(),
-  size = 100
+  size = 10
 )
 
 log_grid
@@ -669,12 +674,10 @@ collect_metrics(final_fit)
 #| echo: true
 
 # Extract the fitted workflow
-fitted_workflow <- final_fit |>
-  extract_workflow()
+fitted_workflow <- extract_workflow(final_fit)
 
 # Extract the fitted model
-fitted_model <- fitted_workflow |>
-  extract_fit_parsnip()
+fitted_model <- extract_fit_parsnip(fitted_workflow)
 
 # Calculate variable importance
 vip::vip(fitted_model)
@@ -689,7 +692,7 @@ vip::vip(fitted_model)
 - **Visualization**: Built-in tools for visualizing results
 - **Tuning**: Streamlined process for hyperparameter optimization
 
-# Intro to Positron {background-color='{{< brand color mauvemist >}}'}
+# 4. Intro to Positron {background-color='{{< brand color mauvemist >}}'}
 
 ## A History of IDEs & Notebooks: RStudio
 
@@ -1080,7 +1083,7 @@ Positron docs | [Run Interactive Apps](https://positron.posit.co/run-interactive
 Visit Posit's new [Positron website](https://positron.posit.co) and their [YouTube channel](https://www.youtube.com/@PositPBC/videos) to learn more
 :::
 
-# Live Demo {background-color='{{< brand color mauvemist >}}'}
+# 5. Live Demo {background-color='{{< brand color mauvemist >}}'}
 
 Let's see Positron in action!
 
